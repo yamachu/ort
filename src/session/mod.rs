@@ -518,7 +518,7 @@ impl Session {
 	/// # 	Ok(())
 	/// # }) }
 	/// ```
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(all(target_arch = "wasm32", not(target_os = "emscripten")))]
 	pub async fn run_async<'r, 's: 'r, 'i, 'v: 'i + 's, O: SelectedOutputMarker, const N: usize>(
 		&'s mut self,
 		input_values: impl Into<SessionInputs<'i, 'v, N>>,
@@ -540,7 +540,7 @@ impl Session {
 		}
 	}
 
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(all(target_arch = "wasm32", not(target_os = "emscripten")))]
 	async fn run_inner_async<'i, 'r, 's: 'r, 'v: 'i + 's>(
 		&'s self,
 		input_names: SmallVec<[&str; STACK_SESSION_INPUTS]>,
