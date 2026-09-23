@@ -208,7 +208,7 @@ impl Session {
 	/// # 	Ok(())
 	/// # }
 	/// ```
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(any(not(target_arch = "wasm32"), target_os = "emscripten"))]
 	pub fn run<'s, 'i, 'v: 'i, const N: usize>(&'s mut self, input_values: impl Into<SessionInputs<'i, 'v, N>>) -> Result<SessionOutputs<'s>> {
 		match input_values.into() {
 			SessionInputs::ValueSlice(input_values) => {
@@ -249,7 +249,7 @@ impl Session {
 	/// # 	Ok(())
 	/// # }
 	/// ```
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(any(not(target_arch = "wasm32"), target_os = "emscripten"))]
 	pub fn run_with_options<'r, 's: 'r, 'i, 'v: 'i, O: SelectedOutputMarker, const N: usize>(
 		&'s mut self,
 		input_values: impl Into<SessionInputs<'i, 'v, N>>,
@@ -268,7 +268,7 @@ impl Session {
 		}
 	}
 
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(any(not(target_arch = "wasm32"), target_os = "emscripten"))]
 	fn run_inner<'i, 'r, 's: 'r, 'v: 'i>(
 		&'s self,
 		input_names: SmallVec<[&str; STACK_SESSION_INPUTS]>,

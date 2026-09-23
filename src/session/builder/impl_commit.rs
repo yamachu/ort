@@ -78,7 +78,7 @@ impl SessionBuilder {
 	///
 	/// If you wish to store the model bytes and the [`InMemorySession`] in the same struct, look for crates that
 	/// facilitate creating self-referential structs, such as [`ouroboros`](https://github.com/joshua-maros/ouroboros).
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(any(not(target_arch = "wasm32"), target_os = "emscripten"))]
 	pub fn commit_from_memory_directly<'m>(&mut self, model_bytes: &'m [u8]) -> Result<InMemorySession<'m>> {
 		// Enable zero-copy deserialization for models in `.ort` format.
 		let _ = self.add_config_entry("session.use_ort_model_bytes_directly", "1");
@@ -89,7 +89,7 @@ impl SessionBuilder {
 	}
 
 	/// Load an ONNX graph from memory and commit the session.
-	#[cfg(not(target_arch = "wasm32"))]
+	#[cfg(any(not(target_arch = "wasm32"), target_os = "emscripten"))]
 	pub fn commit_from_memory(&mut self, model_bytes: &[u8]) -> Result<Session> {
 		self.pre_commit()?;
 
@@ -115,7 +115,7 @@ impl SessionBuilder {
 	}
 
 	/// Downloads a pre-trained ONNX model from the given URL and builds the session.
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(all(target_arch = "wasm32", not(target_os = "emscripten")))]
 	pub async fn commit_from_url(&mut self, model_url: impl AsRef<str>) -> Result<Session> {
 		self.pre_commit()?;
 
@@ -131,7 +131,7 @@ impl SessionBuilder {
 	}
 
 	/// Load an ONNX graph from memory and commit the session.
-	#[cfg(target_arch = "wasm32")]
+	#[cfg(all(target_arch = "wasm32", not(target_os = "emscripten")))]
 	pub async fn commit_from_memory(&mut self, model_bytes: &[u8]) -> Result<Session> {
 		self.pre_commit()?;
 
